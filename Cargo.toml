@@ -1,0 +1,13 @@
+[package]
+name = "mundos"
+version = "0.0.1"
+edition = "2018"
+
+[dependencies]
+bootloader = "0.9.8"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
