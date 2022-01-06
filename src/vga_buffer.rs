@@ -107,6 +107,7 @@ impl ScreenWriter {
     }
 }
 
+
 impl core::fmt::Write for ScreenWriter {
     fn write_str(&mut self, string: &str) -> core::fmt::Result {
         self.write_string(string);
@@ -114,17 +115,27 @@ impl core::fmt::Write for ScreenWriter {
     }
 }
 
-pub fn print_something() {
-    let mut writer = ScreenWriter {
+lazy_static::lazy_static! {
+    pub static ref SCREEN_WRITER: spin::Mutex<ScreenWriter> =spin::Mutex::new(ScreenWriter {
         col_pos: 0,
-        color_code: ColorCode::new(Color::Yellow, Color::Black),
+        color_code: ColorCode::new(Color::Green, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut ScreenBuffer) },
-    };
+    });
+}
 
-    writer.write_byte(b'H');
-    writer.write_string("ello! ");
-    // writer.write_string("Wörld!");
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _print(args: core::fmt::Arguments) {
     use core::fmt::Write;
-    write!(writer, "Welcome to MundOS version {}.{}.{}", 0, 0, 1).unwrap();
-    writer.write_string("\n\n\ntest");
+    SCREEN_WRITER.lock().write_fmt(args).unwrap();
 }
