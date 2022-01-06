@@ -1,6 +1,5 @@
 #![no_std]
 #![no_main]
-// #![feature(const_mut_refs)]
 
 use core::panic::PanicInfo;
 
@@ -16,6 +15,5 @@ fn panic(_info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     println!("Hello, world!");
     println!("Welcome to MundOS v{}.{}.{}", 0, 0, 1);
-    panic!("OH SHIT");
-    // loop {}
+    loop {}
 }
