@@ -74,7 +74,25 @@ impl ScreenWriter {
     }
 
     fn new_line(&mut self) {
-        // TODO
+        for r in 1..BUFFER_HEIGHT {
+            for c in 0..BUFFER_WIDTH {
+                let character = self.buffer.chars[r][c].read();
+                self.buffer.chars[r-1][c].write(character);
+            }
+        }
+        self.clear_row(BUFFER_HEIGHT - 1);
+        self.col_pos = 0;
+    }
+
+    fn clear_row(&mut self, r: usize) {
+        let blank = ScreenChar {
+            ascii_char: b' ',
+            color_code: self.color_code,
+        };
+
+        for c in 0..BUFFER_WIDTH {
+            self.buffer.chars[r][c].write(blank);
+        }
     }
 
     pub fn write_string(&mut self, string: &str) {
@@ -89,6 +107,13 @@ impl ScreenWriter {
     }
 }
 
+impl core::fmt::Write for ScreenWriter {
+    fn write_str(&mut self, string: &str) -> core::fmt::Result {
+        self.write_string(string);
+        Ok(())
+    }
+}
+
 pub fn print_something() {
     let mut writer = ScreenWriter {
         col_pos: 0,
@@ -97,6 +122,9 @@ pub fn print_something() {
     };
 
     writer.write_byte(b'H');
-    writer.write_string("ello ");
-    writer.write_string("Wörld!");
+    writer.write_string("ello! ");
+    // writer.write_string("Wörld!");
+    use core::fmt::Write;
+    write!(writer, "Welcome to MundOS version {}.{}.{}", 0, 0, 1).unwrap();
+    writer.write_string("\n\n\ntest");
 }
