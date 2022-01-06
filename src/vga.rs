@@ -109,6 +109,10 @@ impl ScreenWriter {
     pub fn change_color(&mut self, new_color: ColorCode) {
         self.color_code = new_color;
     }
+
+    pub fn get_color(&self) -> ColorCode {
+        self.color_code
+    }
 }
 
 
