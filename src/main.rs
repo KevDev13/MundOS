@@ -3,8 +3,8 @@
 
 use core::panic::PanicInfo;
 
-mod vga_buffer;
-use vga_buffer::*;
+mod vga;
+use vga::*;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
