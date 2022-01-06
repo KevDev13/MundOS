@@ -4,6 +4,7 @@
 use core::panic::PanicInfo;
 
 mod vga_buffer;
+use vga_buffer::*;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -15,5 +16,7 @@ fn panic(_info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     println!("Hello, world!");
     println!("Welcome to MundOS v{}.{}.{}", 0, 0, 1);
+    vga_color!(ColorCode::new(Color::Yellow, Color::Black));
+    println!("testing 123...");
     loop {}
 }

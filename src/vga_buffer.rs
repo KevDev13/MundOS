@@ -22,10 +22,10 @@ pub enum Color {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
-struct ColorCode(u8);
+pub struct ColorCode(u8);
 
 impl ColorCode {
-    fn new(fg: Color, bg: Color) -> ColorCode {
+    pub fn new(fg: Color, bg: Color) -> ColorCode {
         ColorCode((bg as u8) << 4 | (fg as u8))
     }
 }
@@ -105,6 +105,10 @@ impl ScreenWriter {
             }
         }
     }
+
+    pub fn change_color(&mut self, new_color: ColorCode) {
+        self.color_code = new_color;
+    }
 }
 
 
@@ -138,4 +142,11 @@ macro_rules! println {
 pub fn _print(args: core::fmt::Arguments) {
     use core::fmt::Write;
     SCREEN_WRITER.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! vga_color {
+    ($color:expr) => {
+        SCREEN_WRITER.lock().change_color($color);
+    }
 }
