@@ -122,7 +122,7 @@ impl core::fmt::Write for ScreenWriter {
 lazy_static::lazy_static! {
     pub static ref SCREEN_WRITER: spin::Mutex<ScreenWriter> =spin::Mutex::new(ScreenWriter {
         col_pos: 0,
-        color_code: ColorCode::new(Color::Green, Color::Black),
+        color_code: ColorCode::new(Color::LightGray, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut ScreenBuffer) },
     });
 }
