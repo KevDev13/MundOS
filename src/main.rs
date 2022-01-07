@@ -8,6 +8,8 @@
 
 use core::panic::PanicInfo;
 
+mod serial;
+
 mod vga;
 use vga::*;
 
@@ -75,7 +77,7 @@ fn run_tests(tests: &[&dyn Fn()]) {
 
 #[test_case]
 fn trivial_assert() {
-    print!("Testing trivial... ");
-    assert_eq!(1, 1);
-    print_test_status(0);
+    serial_print!("Testing trivial... ");
+    assert_eq!(0, 1);
+    serial_println!("[ok]");
 }
