@@ -46,12 +46,30 @@ fn print_test_status(test_passed: usize) {
     vga_color!(cur_cc);
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[repr(u32)]
+pub enum QemuExitCode {
+    Success = 0x10, // this ends up making 42 the success code
+    Failure = 0x11,
+}
+
+#[cfg(test)]
+pub fn qemu_exit(exit_code: QemuExitCode) {
+    use x86_64::instructions::port::Port;
+    unsafe {
+        let mut port = Port::new(0xf4);
+        port.write(exit_code as u32);
+    }
+}
+
 #[cfg(test)]
 fn run_tests(tests: &[&dyn Fn()]) {
     println!("Running {} total tests", tests.len());
     for test in tests {
         test();
     }
+
+    qemu_exit(QemuExitCode::Success);
 }
 
 #[test_case]
