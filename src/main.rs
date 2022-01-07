@@ -24,6 +24,7 @@ pub extern "C" fn _start() -> ! {
     loop {}
 }
 
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     println!("{}", _info);
@@ -31,6 +32,15 @@ fn panic(_info: &PanicInfo) -> ! {
 }
 
 /* Testing Functions */
+
+#[cfg(test)]
+#[panic_handler]
+fn panic(_info: &PanicInfo) -> ! {
+    serial_println!("[failed]");
+    serial_println!("Error: {}", _info);
+    qemu_exit(QemuExitCode::Failure);
+    loop {}
+}
 
 #[cfg(test)]
 fn print_test_status(test_passed: usize) {
@@ -78,6 +88,6 @@ fn run_tests(tests: &[&dyn Fn()]) {
 #[test_case]
 fn trivial_assert() {
     serial_print!("Testing trivial... ");
-    assert_eq!(0, 1);
+    assert_eq!(1, 1);
     serial_println!("[ok]");
 }
