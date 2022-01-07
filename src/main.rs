@@ -46,6 +46,7 @@ fn print_test_status(test_passed: usize) {
     vga_color!(cur_cc);
 }
 
+#[cfg(test)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 #[repr(u32)]
 pub enum QemuExitCode {
