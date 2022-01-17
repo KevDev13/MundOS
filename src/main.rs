@@ -12,6 +12,8 @@ pub extern "C" fn _start() -> ! {
     println!("Hello, world!");
     println!("Welcome to MundOS v{}.{}.{}", 0, 0, 1);
 
+    mundos::init();
+
     #[cfg(test)]
     test_main();
 
